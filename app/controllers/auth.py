@@ -17,7 +17,9 @@ class AuthController():
         user = UserRepository.get_user_by_username(username)
 
         if user and check_password_hash(user.password, password):
-            access_token = create_access_token(identity=username)
+            access_token = create_access_token(
+                identity=user.public_id
+            )
             return access_token
 
         raise Unauthorized()

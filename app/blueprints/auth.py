@@ -31,7 +31,7 @@ def register():
     return jsonify(user.dict(exclude={'password'}))
 
 
-@ bp_auth.route('/login',  methods=['POST'])
+@bp_auth.route('/login',  methods=['POST'])
 def login():
     data = request.get_json()
 

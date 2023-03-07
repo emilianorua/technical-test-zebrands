@@ -1,7 +1,5 @@
 from sqlalchemy.sql import func
-from sqlalchemy_serializer import SerializerMixin
 from app.db import db
-from app.structures.user import UserData
 
 
 class User(db.Model):

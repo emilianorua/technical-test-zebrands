@@ -9,6 +9,10 @@ class UserAlreadyExists(Exception):
     pass
 
 
+class DeleteOwnUser(Exception):
+    pass
+
+
 class UserController():
 
     @classmethod
@@ -36,8 +40,53 @@ class UserController():
         return user
 
     @classmethod
+    def update_user(cls, public_id: str, username: str, password: str, email: str, is_admin: bool) -> UserData:
+        validate_email(email)
+
+        user = UserData(
+            public_id=public_id,
+            username=username,
+            password=password,
+            email=email,
+            is_admin=is_admin
+        )
+
+        if UserRepository.username_exists(username):
+            raise UserAlreadyExists('the username is already in use')
+
+        if UserRepository.email_exists(email):
+            raise UserAlreadyExists('the email is already in use')
+
+        user.password = generate_password_hash(password, method='sha256')
+
+        UserRepository.update_user(user)
+
+        return user
+
+    @classmethod
     def get_user_by_username(cls, username: str) -> UserData:
 
         user = UserRepository.get_user_by_username(username)
 
         return user
+
+    @classmethod
+    def get_user_by_public_id(cls, public_id: str) -> UserData:
+
+        user = UserRepository.get_user_by_public_id(public_id)
+
+        return user
+
+    @classmethod
+    def get_all(cls):
+
+        users = UserRepository.get_all()
+
+        return users
+
+    @classmethod
+    def delete_user(cls, current_public_id: str, public_id: str):
+        if current_public_id == public_id:
+            raise DeleteOwnUser('can\'t delete own user')
+
+        UserRepository.delete_user(public_id)

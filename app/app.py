@@ -13,6 +13,9 @@ def create_app(config_class=Config):
     from app.blueprints.auth import bp_auth
     app.register_blueprint(bp_auth)
 
+    from app.blueprints.user import bp_users
+    app.register_blueprint(bp_users)
+
     from app.db import db
     db.init_app(app)
 
