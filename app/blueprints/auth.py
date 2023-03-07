@@ -1,8 +1,9 @@
 from flask import Response, jsonify, request
 from flask import Blueprint
 from pydantic import EmailError, ValidationError
-from app.controllers.auth import UserAlreadyExists, UserController
+from app.controllers.auth import AuthController
 from werkzeug.exceptions import Unauthorized
+from app.controllers.user import UserController, UserAlreadyExists
 
 bp_auth = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -35,7 +36,7 @@ def login():
     data = request.get_json()
 
     try:
-        access_token = UserController.get_access_token(
+        access_token = AuthController.get_access_token(
             username=data.get('username', ''),
             password=data.get('password', '')
         )

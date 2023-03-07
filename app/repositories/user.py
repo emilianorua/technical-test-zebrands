@@ -1,4 +1,3 @@
-from pydantic import ValidationError
 from app.models.user import User
 from app.db import db
 from app.structures.user import UserData
