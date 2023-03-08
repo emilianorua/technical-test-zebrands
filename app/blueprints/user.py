@@ -46,6 +46,11 @@ def create_user():
 def update_user(id):
     data = request.get_json()
 
+    user = UserController.get_user_by_public_id(id)
+
+    if not user:
+        return Response(status=404)
+
     try:
         user = UserController.update_user(
             public_id=id,
@@ -71,6 +76,11 @@ def update_user(id):
 def delete_user(id):
     current_public_id = get_jwt_identity()
 
+    user = UserController.get_user_by_public_id(id)
+
+    if not user:
+        return Response(status=404)
+    
     try:
         UserController.delete_user(current_public_id, id)
     except DeleteOwnUser as e:
