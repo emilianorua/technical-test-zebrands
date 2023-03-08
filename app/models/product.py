@@ -9,7 +9,7 @@ class Product(db.Model):
     name = db.Column(db.String(100), unique=True, nullable=False)
     sku = db.Column(db.String(50), unique=True, nullable=False)
     price = db.Column(db.Float, nullable=False)
-    brand = db.Column(db.String(50), unique=True, nullable=False)
+    brand = db.Column(db.String(50), nullable=False)
     created_at = db.Column(db.DateTime(timezone=True),
                            server_default=func.now())
 
