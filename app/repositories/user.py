@@ -1,3 +1,4 @@
+from sqlalchemy import or_
 from app.models.user import User
 from app.db import db
 from app.structures.user import UserData
@@ -64,9 +65,9 @@ class UserRepository():
     def get_all(cls, public_id):
 
         users = db.session.query(User).filter(
-            User.public_id == public_id if public_id else User.public_id
+            or_(User.public_id == public_id, False if public_id else True)
         ).all()
-        
+
         users_list = [UserData.from_orm(user) for user in users]
         return users_list
 
