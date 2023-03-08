@@ -16,6 +16,9 @@ def create_app(config_class=Config):
     from app.blueprints.user import bp_users
     app.register_blueprint(bp_users)
 
+    from app.blueprints.product import bp_products
+    app.register_blueprint(bp_products)
+
     from app.db import db
     db.init_app(app)
 
