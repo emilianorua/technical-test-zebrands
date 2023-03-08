@@ -12,7 +12,7 @@ bp_users = Blueprint('users', __name__, url_prefix='/users')
 @admin_required()
 def get_all():
     users = UserController.get_all()
-    users_list = [user.dict() for user in users]
+    users_list = [user.dict(exclude={'password'}) for user in users]
     return jsonify(users_list)
 
 
