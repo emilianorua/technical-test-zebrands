@@ -7,6 +7,7 @@ class ProductData(BaseModel):
     sku: str
     price: float
     brand: str
+    queries: int
 
     class Config():
         orm_mode = True

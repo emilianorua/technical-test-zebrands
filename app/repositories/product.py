@@ -70,6 +70,7 @@ class ProductRepository():
             product_to_update.sku = product.sku
             product_to_update.price = product.price
             product_to_update.brand = product.brand
+            product_to_update.queries = product.queries
 
         db.session.commit()
 
@@ -77,8 +78,22 @@ class ProductRepository():
 
     @classmethod
     def delete_product(cls, public_id: str):
+
         product_to_delete = Product.query.filter_by(
-            public_id=public_id).first()
+            public_id=public_id
+        ).first()
 
         db.session.delete(product_to_delete)
+        db.session.commit()
+
+    @classmethod
+    def increment_queries(cls, public_id: str):
+
+        product_to_update = Product.query.filter_by(
+            public_id=public_id
+        ).first()
+
+        if product_to_update:
+            product_to_update.queries = product_to_update.queries + 1
+
         db.session.commit()

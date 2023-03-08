@@ -1,4 +1,5 @@
 from flask import Blueprint, Response, jsonify, request
+from flask_jwt_extended import get_jwt_identity, verify_jwt_in_request
 from pydantic import ValidationError
 from app.controllers.product import ProductAlreadyExists, ProductController
 from app.utils.decorators import admin_required
@@ -9,8 +10,19 @@ bp_products = Blueprint('products', __name__, url_prefix='/products')
 
 @bp_products.route('/', defaults={'public_id': None})
 @bp_products.route('/<public_id>')
-@admin_required()
 def get_all(public_id):
+
+    current_public_id = None
+
+    if verify_jwt_in_request(optional=True):
+        current_public_id = get_jwt_identity()
+
+    if public_id:
+        ProductController.increment_queries(
+            public_id=public_id,
+            user_public_id=current_public_id
+        )
+
     products = ProductController.get_all(public_id)
     products_list = [product.dict() for product in products]
     return jsonify(products_list)
@@ -26,7 +38,8 @@ def create_product():
             name=data.get('name', None),
             sku=data.get('sku', None),
             price=data.get('price', None),
-            brand=data.get('brand', None)
+            brand=data.get('brand', None),
+            queries=0
         )
     except (ValidationError, AttributeError):
         return jsonify({"msg": "must complete all fields correctly"}), 400
@@ -55,7 +68,8 @@ def update_product(id):
             name=data.get('name', None),
             sku=data.get('sku', None),
             price=data.get('price', None),
-            brand=data.get('brand', None)
+            brand=data.get('brand', None),
+            queries=data.get('queries', None)
         )
     except (ValidationError, AttributeError):
         return jsonify({"msg": "must complete all fields correctly"}), 400
@@ -70,12 +84,12 @@ def update_product(id):
 @bp_products.route('/<id>', methods=['DELETE'])
 @admin_required()
 def delete_product(id):
-    
+
     product = ProductController.get_product_by_public_id(id)
 
     if not product:
         return Response(status=404)
-    
+
     try:
         ProductController.delete_product(id)
     except Exception:
