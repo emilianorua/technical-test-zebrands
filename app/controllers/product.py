@@ -43,10 +43,10 @@ class ProductController():
             brand=brand
         )
 
-        if ProductRepository.name_exists(name):
-            raise ProductAlreadyExists('the productname is already in use')
+        if ProductRepository.name_exists(name, public_id):
+            raise ProductAlreadyExists('the product name is already in use')
 
-        if ProductRepository.sku_exists(sku):
+        if ProductRepository.sku_exists(sku, public_id):
             raise ProductAlreadyExists('the email is already in use')
 
         ProductRepository.update_product(product)

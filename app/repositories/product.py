@@ -29,16 +29,22 @@ class ProductRepository():
         return product_data
 
     @classmethod
-    def name_exists(cls, name: str) -> bool:
+    def name_exists(cls, name: str, public_id: str = None) -> bool:
 
-        product = Product.query.filter_by(name=name).one_or_none()
+        product = Product.query.filter(
+            Product.name == name,
+            Product.public_id != public_id
+        ).one_or_none()
 
         return True if product else False
 
     @classmethod
-    def sku_exists(cls, sku: str) -> bool:
+    def sku_exists(cls, sku: str, public_id: str = None) -> bool:
 
-        product = Product.query.filter_by(sku=sku).one_or_none()
+        product = Product.query.filter(
+            Product.sku == sku,
+            Product.public_id != public_id
+        ).one_or_none()
 
         return True if product else False
 
