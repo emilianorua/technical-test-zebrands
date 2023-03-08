@@ -7,10 +7,11 @@ from app.utils.decorators import admin_required
 bp_products = Blueprint('products', __name__, url_prefix='/products')
 
 
-@bp_products.route('/')
+@bp_products.route('/', defaults={'public_id': None})
+@bp_products.route('/<public_id>')
 @admin_required()
-def get_all():
-    products = ProductController.get_all()
+def get_all(public_id):
+    products = ProductController.get_all(public_id)
     products_list = [product.dict() for product in products]
     return jsonify(products_list)
 

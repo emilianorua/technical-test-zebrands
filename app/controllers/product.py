@@ -61,9 +61,9 @@ class ProductController():
         return product
 
     @classmethod
-    def get_all(cls):
+    def get_all(cls, public_id: str):
 
-        products = ProductRepository.get_all()
+        products = ProductRepository.get_all(public_id=public_id)
 
         return products
 

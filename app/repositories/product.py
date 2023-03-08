@@ -49,16 +49,20 @@ class ProductRepository():
         return True if product else False
 
     @classmethod
-    def get_all(cls):
+    def get_all(cls, public_id: str):
 
-        products = db.session.query(Product).all()
+        products = db.session.query(Product).filter(
+            Product.public_id == public_id if public_id else Product.public_id
+        ).all()
+
         products_list = [ProductData.from_orm(product) for product in products]
         return products_list
 
     @classmethod
     def update_product(cls, product: ProductData) -> ProductData:
 
-        product_to_update = Product.query.filter_by(public_id=product.public_id).first()
+        product_to_update = Product.query.filter_by(
+            public_id=product.public_id).first()
 
         if product:
             product_to_update.name = product.name
@@ -72,7 +76,8 @@ class ProductRepository():
 
     @classmethod
     def delete_product(cls, public_id: str):
-        product_to_delete = Product.query.filter_by(public_id=public_id).first()
+        product_to_delete = Product.query.filter_by(
+            public_id=public_id).first()
 
         db.session.delete(product_to_delete)
         db.session.commit()
