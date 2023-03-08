@@ -8,10 +8,11 @@ from app.utils.decorators import admin_required
 bp_users = Blueprint('users', __name__, url_prefix='/users')
 
 
-@bp_users.route('/')
+@bp_users.route('/', defaults={'public_id': None})
+@bp_users.route('/<public_id>')
 @admin_required()
-def get_all():
-    users = UserController.get_all()
+def get_all(public_id):
+    users = UserController.get_all(public_id=public_id)
     users_list = [user.dict(exclude={'password'}) for user in users]
     return jsonify(users_list)
 

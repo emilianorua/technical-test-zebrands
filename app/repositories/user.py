@@ -61,9 +61,12 @@ class UserRepository():
         return True if user else False
 
     @classmethod
-    def get_all(cls):
+    def get_all(cls, public_id):
 
-        users = db.session.query(User).all()
+        users = db.session.query(User).filter(
+            User.public_id == public_id if public_id else User.public_id
+        ).all()
+        
         users_list = [UserData.from_orm(user) for user in users]
         return users_list
 

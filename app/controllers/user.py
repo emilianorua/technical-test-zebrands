@@ -78,9 +78,9 @@ class UserController():
         return user
 
     @classmethod
-    def get_all(cls):
+    def get_all(cls, public_id: str):
 
-        users = UserRepository.get_all()
+        users = UserRepository.get_all(public_id=public_id)
 
         return users
 
