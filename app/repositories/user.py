@@ -41,16 +41,22 @@ class UserRepository():
         return user_data
 
     @classmethod
-    def username_exists(cls, username: str) -> bool:
+    def username_exists(cls, username: str, public_id: str = None) -> bool:
 
-        user = User.query.filter_by(username=username).one_or_none()
+        user = User.query.filter(
+            User.username == username,
+            User.public_id != public_id
+        ).one_or_none()
 
         return True if user else False
 
     @classmethod
-    def email_exists(cls, email: str) -> bool:
+    def email_exists(cls, email: str, public_id: str = None) -> bool:
 
-        user = User.query.filter_by(email=email).one_or_none()
+        user = User.query.filter(
+            User.email == email,
+            User.public_id != public_id
+        ).one_or_none()
 
         return True if user else False
 

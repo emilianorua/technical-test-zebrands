@@ -51,10 +51,10 @@ class UserController():
             is_admin=is_admin
         )
 
-        if UserRepository.username_exists(username):
+        if UserRepository.username_exists(username, public_id):
             raise UserAlreadyExists('the username is already in use')
 
-        if UserRepository.email_exists(email):
+        if UserRepository.email_exists(email, public_id):
             raise UserAlreadyExists('the email is already in use')
 
         user.password = generate_password_hash(password, method='sha256')
