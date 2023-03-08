@@ -4,6 +4,7 @@ from flask import Response
 from flask_jwt_extended import get_jwt, verify_jwt_in_request
 
 from app.controllers.user import UserController
+from app.structures.user import Roles
 
 
 def admin_required():
@@ -15,7 +16,7 @@ def admin_required():
             
             user = UserController.get_user_by_public_id(claims.get('sub',''))
 
-            if user and user.is_admin:
+            if user and user.role == Roles.ADMIN:
                 return fn(*args, **kwargs)
             else:
                 return Response(status=403)

@@ -26,7 +26,7 @@ def create_user():
             username=data.get('username', None),
             password=data.get('password', None),
             email=data.get('email', None),
-            is_admin=data.get('is_admin', None)
+            role=data.get('role', None)
         )
     except (ValidationError, AttributeError):
         return jsonify({"msg": "must complete all fields correctly"}), 400
@@ -51,7 +51,7 @@ def update_user(id):
             username=data.get('username', None),
             password=data.get('password', None),
             email=data.get('email', None),
-            is_admin=data.get('is_admin', None)
+            role=data.get('role', None)
         )
     except (ValidationError, AttributeError):
         return jsonify({"msg": "must complete all fields correctly"}), 400

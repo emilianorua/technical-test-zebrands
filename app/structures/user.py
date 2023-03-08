@@ -1,4 +1,10 @@
+import enum
 from pydantic import BaseModel, constr
+
+
+class Roles(str, enum.Enum):
+    ADMIN = 'ADMIN'
+    USER = 'USER'
 
 
 class UserData(BaseModel):
@@ -6,7 +12,7 @@ class UserData(BaseModel):
     username: constr(min_length=8)
     email: str
     password: constr(min_length=8)
-    is_admin: bool
+    role: Roles
 
     class Config():
         orm_mode = True

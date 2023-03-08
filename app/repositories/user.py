@@ -75,7 +75,7 @@ class UserRepository():
             user_to_update.username = user.username
             user_to_update.password = user.password
             user_to_update.email = user.email
-            user_to_update.is_admin = user.is_admin
+            user_to_update.role = user.role
 
         db.session.commit()
 

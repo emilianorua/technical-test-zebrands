@@ -16,7 +16,7 @@ class DeleteOwnUser(Exception):
 class UserController():
 
     @classmethod
-    def create_user(cls, username: str, password: str, email: str, is_admin: bool) -> UserData:
+    def create_user(cls, username: str, password: str, email: str, role: str) -> UserData:
         validate_email(email)
 
         user = UserData(
@@ -24,7 +24,7 @@ class UserController():
             username=username,
             password=password,
             email=email,
-            is_admin=is_admin
+            role=role
         )
 
         if UserRepository.username_exists(username):
@@ -40,7 +40,7 @@ class UserController():
         return user
 
     @classmethod
-    def update_user(cls, public_id: str, username: str, password: str, email: str, is_admin: bool) -> UserData:
+    def update_user(cls, public_id: str, username: str, password: str, email: str, role: int) -> UserData:
         validate_email(email)
 
         user = UserData(
@@ -48,7 +48,7 @@ class UserController():
             username=username,
             password=password,
             email=email,
-            is_admin=is_admin
+            role=role
         )
 
         if UserRepository.username_exists(username, public_id):

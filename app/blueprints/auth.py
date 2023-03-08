@@ -4,6 +4,7 @@ from pydantic import EmailError, ValidationError
 from app.controllers.auth import AuthController
 from werkzeug.exceptions import Unauthorized
 from app.controllers.user import UserController, UserAlreadyExists
+from app.models.user import Roles
 
 bp_auth = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -11,13 +12,13 @@ bp_auth = Blueprint('auth', __name__, url_prefix='/auth')
 @bp_auth.route('/register',  methods=['POST'])
 def register():
     data = request.get_json()
-
+    
     try:
         user = UserController.create_user(
             username=data.get('username', None),
             password=data.get('password', None),
             email=data.get('email', None),
-            is_admin=False
+            role=Roles.ADMIN
         )
     except (ValidationError, AttributeError):
         return jsonify({"msg": "must complete all fields correctly"}), 400
