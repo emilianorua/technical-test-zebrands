@@ -1,3 +1,4 @@
+from sqlalchemy import or_
 from app.models.product import Product
 from app.structures.product import ProductData
 from app.db import db
@@ -52,7 +53,7 @@ class ProductRepository():
     def get_all(cls, public_id: str):
 
         products = db.session.query(Product).filter(
-            Product.public_id == public_id if public_id else Product.public_id
+            or_(Product.public_id == public_id, False if public_id else True)
         ).all()
 
         products_list = [ProductData.from_orm(product) for product in products]
