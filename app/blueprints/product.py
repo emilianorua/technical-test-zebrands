@@ -44,6 +44,11 @@ def create_product():
 def update_product(id):
     data = request.get_json()
 
+    product = ProductController.get_product_by_public_id(id)
+
+    if not product:
+        return Response(status=404)
+
     try:
         product = ProductController.update_product(
             public_id=id,
@@ -65,6 +70,12 @@ def update_product(id):
 @bp_products.route('/<id>', methods=['DELETE'])
 @admin_required()
 def delete_product(id):
+    
+    product = ProductController.get_product_by_public_id(id)
+
+    if not product:
+        return Response(status=404)
+    
     try:
         ProductController.delete_product(id)
     except Exception:
