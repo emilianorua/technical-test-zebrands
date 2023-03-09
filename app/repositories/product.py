@@ -70,7 +70,6 @@ class ProductRepository():
             product_to_update.sku = product.sku
             product_to_update.price = product.price
             product_to_update.brand = product.brand
-            product_to_update.queries = product.queries
 
         db.session.commit()
 

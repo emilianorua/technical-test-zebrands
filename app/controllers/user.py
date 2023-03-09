@@ -1,8 +1,10 @@
 import uuid
 from pydantic import validate_email
 from app.repositories.user import UserRepository
-from app.structures.user import UserData
+from app.structures.user import Roles, UserData
 from werkzeug.security import generate_password_hash
+
+from app.utils.email_helper import EmailHelper
 
 
 class UserAlreadyExists(Exception):
@@ -37,6 +39,9 @@ class UserController():
 
         UserRepository.create_user(user)
 
+        if user.role == Roles.ADMIN:
+            EmailHelper.send_verification_email(user.email)
+
         return user
 
     @classmethod
@@ -59,7 +64,12 @@ class UserController():
 
         user.password = generate_password_hash(password, method='sha256')
 
+        old_user = UserRepository.get_user_by_public_id(public_id)
+
         UserRepository.update_user(user)
+
+        if user.role == Roles.ADMIN and (old_user.role != user.role or old_user.email != user.email):
+            EmailHelper.send_verification_email(user.email)
 
         return user
 

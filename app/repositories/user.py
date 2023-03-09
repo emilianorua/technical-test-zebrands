@@ -1,7 +1,8 @@
+from typing import List
 from sqlalchemy import or_
 from app.models.user import User
 from app.db import db
-from app.structures.user import UserData
+from app.structures.user import Roles, UserData
 
 
 class UserRepository():
@@ -62,7 +63,7 @@ class UserRepository():
         return True if user else False
 
     @classmethod
-    def get_all(cls, public_id):
+    def get_all(cls, public_id: str) -> List[UserData]:
 
         users = db.session.query(User).filter(
             or_(User.public_id == public_id, False if public_id else True)
@@ -91,3 +92,14 @@ class UserRepository():
 
         db.session.delete(user_to_delete)
         db.session.commit()
+
+    @classmethod
+    def get_admins_emails(cls, public_id: str = None) -> List[str]:
+
+        users = db.session.query(User).filter(
+            or_(User.public_id != public_id, False if public_id else True),
+            User.role == Roles.ADMIN
+        ).all()
+
+        emails_list = [user.email for user in users]
+        return emails_list

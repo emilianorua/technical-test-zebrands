@@ -1,3 +1,4 @@
+from typing import Optional
 from pydantic import BaseModel
 
 
@@ -7,7 +8,7 @@ class ProductData(BaseModel):
     sku: str
     price: float
     brand: str
-    queries: int
+    queries: Optional[int]
 
     class Config():
         orm_mode = True

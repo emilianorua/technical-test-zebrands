@@ -1,7 +1,7 @@
 from flask import Blueprint, Response, jsonify, request
 from flask_jwt_extended import get_jwt_identity, verify_jwt_in_request
 from pydantic import ValidationError
-from app.controllers.product import ProductAlreadyExists, ProductController
+from app.controllers.product import ProductAlreadyExists, ProductController, ProductNotFound
 from app.utils.decorators import admin_required
 
 
@@ -56,25 +56,22 @@ def create_product():
 @admin_required()
 def update_product(id):
     data = request.get_json()
-
-    product = ProductController.get_product_by_public_id(id)
-
-    if not product:
-        return Response(status=404)
-
+    user_public_id = get_jwt_identity()
     try:
         product = ProductController.update_product(
+            user_public_id=user_public_id,
             public_id=id,
             name=data.get('name', None),
             sku=data.get('sku', None),
             price=data.get('price', None),
-            brand=data.get('brand', None),
-            queries=data.get('queries', None)
+            brand=data.get('brand', None)
         )
     except (ValidationError, AttributeError):
         return jsonify({"msg": "must complete all fields correctly"}), 400
     except ProductAlreadyExists as e:
         return jsonify({"msg": str(e)}), 400
+    except ProductNotFound:
+        return Response(status=404)
     except Exception:
         return Response(status=500)
 
@@ -85,13 +82,10 @@ def update_product(id):
 @admin_required()
 def delete_product(id):
 
-    product = ProductController.get_product_by_public_id(id)
-
-    if not product:
-        return Response(status=404)
-
     try:
         ProductController.delete_product(id)
+    except ProductNotFound:
+        return Response(status=404)
     except Exception:
         return Response(status=500)
 
