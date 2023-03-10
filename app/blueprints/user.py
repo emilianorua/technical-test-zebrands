@@ -5,7 +5,7 @@ from app.controllers.user import DeleteOwnUser, UserAlreadyExists, UserControlle
 from app.utils.decorators import admin_required
 
 
-bp_users = Blueprint('users', __name__, url_prefix='/users')
+bp_users = Blueprint('users', __name__, url_prefix='/api/v1/users')
 
 
 @bp_users.route('/', defaults={'public_id': None})

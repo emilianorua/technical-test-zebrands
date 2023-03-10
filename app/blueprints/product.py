@@ -5,7 +5,7 @@ from app.controllers.product import ProductAlreadyExists, ProductController, Pro
 from app.utils.decorators import admin_required
 
 
-bp_products = Blueprint('products', __name__, url_prefix='/products')
+bp_products = Blueprint('products', __name__, url_prefix='/api/v1/products')
 
 
 @bp_products.route('/', defaults={'public_id': None})

@@ -6,7 +6,7 @@ from werkzeug.exceptions import Unauthorized
 from app.controllers.user import UserController, UserAlreadyExists
 from app.models.user import Roles
 
-bp_auth = Blueprint('auth', __name__, url_prefix='/auth')
+bp_auth = Blueprint('auth', __name__, url_prefix='/api/v1/auth')
 
 
 @bp_auth.route('/register',  methods=['POST'])
