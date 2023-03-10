@@ -18,7 +18,7 @@ def register():
             username=data.get('username', None),
             password=data.get('password', None),
             email=data.get('email', None),
-            role=Roles.ADMIN
+            role=Roles.USER
         )
     except (ValidationError, AttributeError):
         return jsonify({"msg": "must complete all fields correctly"}), 400
