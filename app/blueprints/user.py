@@ -1,7 +1,8 @@
-from flask import Blueprint, Response, jsonify, request
+from flask import Blueprint, Response, jsonify, request, current_app
 from flask_jwt_extended import get_jwt_identity
 from pydantic import EmailError, ValidationError
 from app.controllers.user import DeleteOwnUser, UserAlreadyExists, UserController
+from app.structures.user import Roles
 from app.utils.decorators import admin_required
 
 
@@ -28,6 +29,31 @@ def create_user():
             password=data.get('password', None),
             email=data.get('email', None),
             role=data.get('role', None)
+        )
+    except (ValidationError, AttributeError):
+        return jsonify({"msg": "must complete all fields correctly"}), 400
+    except EmailError:
+        return jsonify({"msg": "please insert a valid email address"}), 400
+    except UserAlreadyExists as e:
+        return jsonify({"msg": str(e)}), 400
+    except Exception:
+        return Response(status=500)
+
+    return jsonify(user.dict(exclude={'password'}))
+
+@bp_users.route('/createadminuser', methods=['POST'])
+def create_admin_user():
+    if current_app.config['ENV'] != 'DEBUG':
+        return Response(403)
+
+    data = request.get_json()
+
+    try:
+        user = UserController.create_user(
+            username=data.get('username', None),
+            password=data.get('password', None),
+            email=data.get('email', None),
+            role=Roles.ADMIN
         )
     except (ValidationError, AttributeError):
         return jsonify({"msg": "must complete all fields correctly"}), 400
