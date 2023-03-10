@@ -61,7 +61,7 @@ The new admin user. Example:
 
 # TEST 
 
-You can test the API with this postman collection: https://easyupload.io/8jd77u
+You can test the API with this postman collection: https://documenter.getpostman.com/view/18812062/2s93JrvjX5#080201fa-94c7-4027-8a97-6a7f9e208eff
 
 # API Documentation
 
